@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block content %}
+<head>
+<style type="text/css">
+  li{
+   position:absolute;
+   list-style:none;
+   width:20%;
+   text-align:center;
+  }
+ </style>
+<script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+        <script type="text/javascript" charset="utf-8">
+             
+            var socket;
+            $(document).ready(function(){
+                socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
+                socket.on('connect', function() {
+                    socket.emit('joined', {});
+                });
+                socket.on('status', function(data) {
+                    $('#chat').val($('#chat').val() + '<' + data.msg + '>\n');
+                    $('#chat').scrollTop($('#chat')[0].scrollHeight);
+                });
+                socket.on('message_recieve', function(data) {
+                    $('#chat').val($('#chat').val() + data.msg + '\n');
+                    $('#chat').scrollTop($('#chat')[0].scrollHeight);
+                });
+                socket.on('dis_all', function(data) {
+                  	 socket.disconnect();
+                     window.location.href = "{{ url_for('index') }}";
+                });
+                $('#text').keypress(function(e) {
+                    var code = e.keyCode || e.which;
+                    if (code == 13) {
+                        text = $('#text').val();
+                        $('#text').val('');
+                        socket.emit('text', {msg: text});
+                    }
+                });
+            
+            // display_circle(listele);
+            display_circle();
+
+            });
+            function leave_room() {
+                socket.emit('left', {}, function() {
+                    socket.disconnect();
+
+                    // go back to the login page
+                    window.location.href = "{{ url_for('index') }}";
+                });
+            }
+            function delete_room() {
+            	socket.emit('delete' , {}, function(){
+            	})
+            }
+
+            function display_circle(){
+                var listElements = document.getElementById("my_list").getElementsByTagName("li");
+                var step = (2*Math.PI)/listElements.length;
+                var angle=0;
+
+                var $this = $(show_cir);
+                var offset = $this.offset();
+                var width = $this.width();
+                var height = $this.height();
+
+                var circleCenterX = offset.left + width / 2 + 100;
+                var circleCenterY = offset.top + height / 2;
+                var radius = 90;
+                for(var i = 0; i<listElements.length; i++)
+                { 
+                    var element = listElements[i];
+                    var liLeft=Number(Math.round(circleCenterX+radius*Math.cos(angle)));
+                    var liTop=Number(Math.round(circleCenterY+radius*Math.sin(angle)));
+                    element.style.left = liLeft+"px";
+                    element.style.top = liTop+"px";
+                    angle+=step;   
+                } 
+            }
+            
+        </script>
+    </head>
+    <body>
+        <h2>Play Room: {{ room }}</h2>
+       <!--  <script type="text/javascript">
+            
+            
+        </script> -->
+        <div id = "show_cir" style="height: 250px; width: 200px;">
+                 <ul style="" id = "my_list">
+                    <li>aman</li>
+                    <li>shrey</li>
+                    <li>kk</li>
+                    <li>gupta</li>
+                    <li>abhigya</li>
+                    <li>harish</li>
+                </ul> 
+            </div>
+            </div>
+        <div style="display: flex;
+        flex-direction: row;
+                    /*
+                    flex-wrap: nowrap;
+                    */
+        ">
+            <div style="padding: 0 7px 0 7px;">
+                <textarea id = "console_text" cols="40" rows="20"></textarea><br><br>
+                <input id = "console" size="40" placeholder="Enter Console commands here"><br><br>    
+            </div>
+            
+            <div style="padding: 0 7px 0 7px;">
+                <textarea id="chat" cols="80" rows="20"></textarea><br><br>
+                <input id="text" size="80" placeholder="Enter your chat message here"><br><br>    
+            </div>
+        </div>
+        <a href="#" onclick="leave_room();">Leave this room</a>
+        <a href="#" onclick="delete_room();">Delete this room</a>
+	</body>
+{% endblock %}

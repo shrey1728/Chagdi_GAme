@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Hi, {{ current_user.username }}!</h1>
+    <form action="" method="post">
+    	{{ join_form.hidden_tag() }}
+    	<p>
+    		{{ join_form.room_name.label }}<br>
+    		{{ join_form.room_name(size = 32) }}<br>
+    		{% for error in join_form.room_name.errors %}
+    		<span style="color: red;">[{{ error }}]</span>
+    		{% endfor %}
+
+    	</p>
+    	<p>{{ join_form.submit() }}</p>
+    </form>
+    <form action="" method="post">
+    	{{ host_form.hidden_tag() }}
+    	<p>
+    		{{ host_form.room_name.label }}<br>
+    		{{ host_form.room_name(size = 32) }}<br>
+    		{% for error in host_form.room_name.errors %}
+    		<span style="color: red;">[{{ error }}]</span>
+    		{% endfor %}
+    	</p>
+    	<p>{{ host_form.submit() }}</p>
+    </form>
+
+{% endblock %}
