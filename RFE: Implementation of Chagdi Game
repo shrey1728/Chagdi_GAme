@@ -1,0 +1,26 @@
+# Problem
+We need to implement Chagdi game starting from the basics. It will allow teams of six players to come on board and play game online.
+
+# Duration
+May 30'2020
+
+# Current State
+Draft
+
+# Proposers
+* Shrey Aggarwal
+
+# Detail
+We wish to create Chagdi game online with chat room. Also, we wish to provide each player with multiple options from which he can choose from as this would help in not checking for the garbage input everytime. Also, we would abstract the whole thing so that this would not interfere with the front end developer. 
+
+# Proposed solution
+The solution is implemented in following stages:
+* First we would decide upon the framework(most suitably class) with will mostly be an abstract class. Also, we would make derived classes which will inherit the properties of it's parent class. 
+* Second, the game would be divided into several states and the game proceeds as we proceeds with the state and as soon as we reach the last state, the game finishes.
+
+
+# Record of votes
+
+# Resolution
+
+# CC
